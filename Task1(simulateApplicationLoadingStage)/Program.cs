@@ -13,14 +13,13 @@ namespace Task1_simulateApplicationLoadingStage_
             {
                 var splash = Task.Run(() => ShowSplash());
                 splash.Wait();
-                var errorOfShowSplash = splash.ContinueWith(ant => Console.WriteLine(ant.Exception), TaskContinuationOptions.OnlyOnFaulted);
                 var license = splash.ContinueWith(ant => RequestLicense(), TaskContinuationOptions.NotOnCanceled);
                 var errorOfRequestLicense = license.ContinueWith(ant => Console.WriteLine(ant.Exception), TaskContinuationOptions.OnlyOnFaulted);
                 var checkForUpdate = splash.ContinueWith(ant => CheckForUpdate(), TaskContinuationOptions.NotOnCanceled);
                 var errorOfCheckForUpdate = checkForUpdate.ContinueWith(ant => Console.WriteLine(ant.Exception), TaskContinuationOptions.OnlyOnFaulted);
                 var downloadUpdate = checkForUpdate.ContinueWith(ant => DownloadUpdate(), TaskContinuationOptions.NotOnCanceled);
                 var errorOfDownloadUpdate = downloadUpdate.ContinueWith(ant => Console.WriteLine(ant.Exception), TaskContinuationOptions.OnlyOnFaulted);
-                var setupMenus = splash.ContinueWith(ant => SetupMenus(), TaskContinuationOptions.NotOnCanceled);
+                var setupMenus = license.ContinueWith(ant => SetupMenus(), TaskContinuationOptions.NotOnCanceled);
                 var errorOfSetupMenus = setupMenus.ContinueWith(ant => Console.WriteLine(ant.Exception), TaskContinuationOptions.OnlyOnFaulted);
                 var display = Task.Factory.ContinueWhenAll(new[] { downloadUpdate, setupMenus }, tasks => DisplayWelcome())
                     .ContinueWith(ant => HideSplash());
@@ -40,7 +39,6 @@ namespace Task1_simulateApplicationLoadingStage_
         {
             string text = "Show splash";
             Console.WriteLine(text);
-            RamdomException(text);
         }
 
         /// <summary>
@@ -90,7 +88,6 @@ namespace Task1_simulateApplicationLoadingStage_
         {
             string text = "Display welcome";
             Console.WriteLine(text);
-            RamdomException(text);
         }
 
         /// <summary>
@@ -100,7 +97,6 @@ namespace Task1_simulateApplicationLoadingStage_
         {
             string text = "Hide splash";
             Console.WriteLine(text);
-            RamdomException(text);
         }
 
         /// <summary>
@@ -113,7 +109,7 @@ namespace Task1_simulateApplicationLoadingStage_
             {
                 Random random = new Random();
                 int value = random.Next(0, 15);
-                if ((value % 3) == 0)
+                if ((value % 5) == 0)
                 {
                     throw new MyException(name);
                 }
