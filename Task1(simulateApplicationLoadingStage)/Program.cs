@@ -13,13 +13,13 @@ namespace Task1_simulateApplicationLoadingStage_
             {
                 var splash = Task.Run(() => ShowSplash());
                 splash.Wait();
-                var license = splash.ContinueWith(ant => RequestLicense(), TaskContinuationOptions.NotOnCanceled);
+                var license = splash.ContinueWith(ant => RequestLicense(), TaskContinuationOptions.NotOnFaulted);
                 var errorOfRequestLicense = license.ContinueWith(ant => Console.WriteLine(ant.Exception), TaskContinuationOptions.OnlyOnFaulted);
-                var checkForUpdate = splash.ContinueWith(ant => CheckForUpdate(), TaskContinuationOptions.NotOnCanceled);
+                var checkForUpdate = splash.ContinueWith(ant => CheckForUpdate(), TaskContinuationOptions.NotOnFaulted);
                 var errorOfCheckForUpdate = checkForUpdate.ContinueWith(ant => Console.WriteLine(ant.Exception), TaskContinuationOptions.OnlyOnFaulted);
-                var downloadUpdate = checkForUpdate.ContinueWith(ant => DownloadUpdate(), TaskContinuationOptions.NotOnCanceled);
+                var downloadUpdate = checkForUpdate.ContinueWith(ant => DownloadUpdate(), TaskContinuationOptions.NotOnFaulted);
                 var errorOfDownloadUpdate = downloadUpdate.ContinueWith(ant => Console.WriteLine(ant.Exception), TaskContinuationOptions.OnlyOnFaulted);
-                var setupMenus = license.ContinueWith(ant => SetupMenus(), TaskContinuationOptions.NotOnCanceled);
+                var setupMenus = license.ContinueWith(ant => SetupMenus(), TaskContinuationOptions.NotOnFaulted);
                 var errorOfSetupMenus = setupMenus.ContinueWith(ant => Console.WriteLine(ant.Exception), TaskContinuationOptions.OnlyOnFaulted);
                 var display = Task.Factory.ContinueWhenAll(new[] { downloadUpdate, setupMenus }, tasks => DisplayWelcome())
                     .ContinueWith(ant => HideSplash());
@@ -48,7 +48,7 @@ namespace Task1_simulateApplicationLoadingStage_
         {
             string text = "Request license";
             Console.WriteLine(text);
-            RamdomException(text);
+            RandomException(text);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Task1_simulateApplicationLoadingStage_
         {
             string text = "Check for update";
             Console.WriteLine(text);
-            RamdomException(text);
+            RandomException(text);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Task1_simulateApplicationLoadingStage_
         {
             string text = "Download update";
             Console.WriteLine(text);
-            RamdomException(text);
+            RandomException(text);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Task1_simulateApplicationLoadingStage_
         {
             string text = "Setup menus";
             Console.WriteLine(text);
-            RamdomException(text);
+            RandomException(text);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Task1_simulateApplicationLoadingStage_
         /// Create the random exception.
         /// </summary>
         /// <param name="name">The name of the method in which the error occurred</param>
-        private static void RamdomException(string name)
+        private static void RandomException(string name)
         {
             try
             {
