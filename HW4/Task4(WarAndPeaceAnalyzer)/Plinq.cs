@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Task4_WarAndPeaceAnalyzer_
 {
@@ -27,23 +28,8 @@ namespace Task4_WarAndPeaceAnalyzer_
             Console.Write("Количество строк: ");
             Console.WriteLine(count);
 
-            var result = (textMass.AsParallel()
-                .Select(line => new { Name = line, Count = textMass.Count(str => str == line) })
-                .Where(line => line.Count > 1)
-                .Distinct()
-                .ToDictionary(line => line.Name, line => line.Count));
-
-            int i = 0;
-            foreach (var element in result.Where(element => element.Key.Length > 5))
-            {
-                string word = element.Key;
-                word = word.Replace(",", "");
-                words.Add(word);
-                i++;
-            }
-
             Console.WriteLine("10 наиболее встречающихся слов: ");
-            string[] tenMostCommonWords = FindTenMostCommonWords();
+            string[] tenMostCommonWords = FindTenMostCommonWords(textMass);
             int place = 1;
             foreach (var word in tenMostCommonWords)
             {
@@ -57,9 +43,9 @@ namespace Task4_WarAndPeaceAnalyzer_
         /// Find 10 most common words in the text.
         /// </summary>
         /// <returns>Array of words.</returns>
-        private string[] FindTenMostCommonWords()
+        private string[] FindTenMostCommonWords(string[] textMass)
         {
-            var descendingOrder = (from word in words
+            var descendingOrder = (from word in textMass.AsParallel()
                                    where word.Length > 5
                                    group word by word into g
                                    orderby g.Count() descending
