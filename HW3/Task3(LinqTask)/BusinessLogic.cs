@@ -123,20 +123,24 @@ namespace Task3_LinqTask_
             return listOfAllAuthors;
         }
 
-        /// <summary>
-        /// Get users dictionary.
-        /// </summary>
-        /// <returns>Dictionary of users.</returns>
-        /*public Dictionary<int, User> GetUsersDictionary()
-        {
-            Dictionary<string, Users>
-        }*/
-        
-        /// <summary>
-        /// Get max user's ID.
-        /// </summary>
-        /// <returns>Max ID value.</returns>
-        public int GetMaxID()
+		/// <summary>
+		/// Get users dictionary.
+		/// </summary>
+		/// <returns>Dictionary of users.</returns>
+		public Dictionary<string, User> GetUsersDictionary()
+		{
+			Dictionary<string, User> dictionary = new Dictionary<string, User>();
+			var people = users
+				.GroupBy(p => p.Name, StringComparer.OrdinalIgnoreCase)
+				.ToDictionary(g => g.Key, )
+
+		}
+
+		/// <summary>
+		/// Get max user's ID.
+		/// </summary>
+		/// <returns>Max ID value.</returns>
+		public int GetMaxID()
         {
             int maxValue = users[0].ID;
             foreach (var user in users.Where(user => maxValue < user.ID))
